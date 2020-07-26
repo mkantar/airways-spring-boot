@@ -8,15 +8,13 @@ import java.util.List;
 public class AirlineDTO implements Serializable {
     private Long id;
     private String company;
-    private List<FlightDTO> flights;
 
     public AirlineDTO() {
     }
 
-    public AirlineDTO(Long id, String company, List<FlightDTO> flights) {
+    public AirlineDTO(Long id, String company) {
         this.id = id;
         this.company = company;
-        this.flights = flights;
     }
 
     public Long getId() {
@@ -34,12 +32,5 @@ public class AirlineDTO implements Serializable {
     public void setCompany(String company) {
         this.company = company;
     }
-
-    public List<FlightDTO> getFlights() {
-        return flights;
-    }
-
-    public void setFlights(List<FlightDTO> flights) {
-        this.flights = flights;
-    }
+    
 }

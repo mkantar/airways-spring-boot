@@ -1,7 +1,11 @@
 package com.kantar.airways.domain.entity;
 
-import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
 @Table(name = "AIRLINE")
@@ -13,9 +17,6 @@ public class AirlineEntity {
 
     @Column(unique = true)
     private String company;
-
-    @OneToMany(mappedBy = "airline", fetch = FetchType.LAZY)
-    private List<FlightEntity> flights;
 
     public AirlineEntity() {
     }
@@ -39,14 +40,6 @@ public class AirlineEntity {
 
     public void setCompany(String company) {
         this.company = company;
-    }
-
-    public List<FlightEntity> getFlights() {
-        return flights;
-    }
-
-    public void setFlights(List<FlightEntity> flights) {
-        this.flights = flights;
     }
 
     @Override

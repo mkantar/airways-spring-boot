@@ -15,12 +15,6 @@ public class PassengerEntity {
 
     private String surname;
 
-    @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
-    private List<TicketEntity> tickets;
-
-    @OneToMany(mappedBy = "passenger", fetch = FetchType.LAZY)
-    private List<PaymentEntity> payments;
-
     public PassengerEntity() {
     }
 
@@ -52,22 +46,6 @@ public class PassengerEntity {
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public List<TicketEntity> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<TicketEntity> tickets) {
-        this.tickets = tickets;
-    }
-
-    public List<PaymentEntity> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(List<PaymentEntity> payments) {
-        this.payments = payments;
     }
 
     @Override

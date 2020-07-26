@@ -10,18 +10,14 @@ public class PassengerDTO implements Serializable {
     private Long id;
     private String name;
     private String surname;
-    private List<TicketDTO> tickets;
-    private List<PaymentDTO> payments;
 
     public PassengerDTO() {
     }
 
-    public PassengerDTO(Long id, String name, String surname, List<TicketDTO> tickets, List<PaymentDTO> payments) {
+    public PassengerDTO(Long id, String name, String surname) {
         this.id = id;
         this.name = name;
         this.surname = surname;
-        this.tickets = tickets;
-        this.payments = payments;
     }
 
     public Long getId() {
@@ -48,19 +44,4 @@ public class PassengerDTO implements Serializable {
         this.surname = surname;
     }
 
-    public List<TicketDTO> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<TicketDTO> tickets) {
-        this.tickets = tickets;
-    }
-
-    public List<PaymentDTO> getPayments() {
-        return payments;
-    }
-
-    public void setPayments(List<PaymentDTO> payments) {
-        this.payments = payments;
-    }
 }
