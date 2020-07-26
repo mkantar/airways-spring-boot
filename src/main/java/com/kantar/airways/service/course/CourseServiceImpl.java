@@ -1,18 +1,7 @@
 package com.kantar.airways.service.course;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.kantar.airways.common.exception.AirwayBusinessException;
-import com.kantar.airways.common.exception.AirwayNotFoundException;
+import com.kantar.airways.common.exception.BusinessException;
+import com.kantar.airways.common.exception.NotFoundException;
 import com.kantar.airways.common.mapper.AirportMapper;
 import com.kantar.airways.common.mapper.CourseMapper;
 import com.kantar.airways.domain.entity.CourseEntity;
@@ -27,6 +16,16 @@ import com.kantar.airways.service.course.model.request.RequestGetCourse;
 import com.kantar.airways.service.course.model.response.ResponseCreateCourse;
 import com.kantar.airways.service.course.model.response.ResponseGetAllCourses;
 import com.kantar.airways.service.course.model.response.ResponseGetCourse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -48,67 +47,62 @@ public class CourseServiceImpl implements CourseService {
 
 	@Override
 	public ResponseGetAllCourses getAllCourses(RequestGetAllCourses request) {
-		ResponseGetAllCourses response = new ResponseGetAllCourses();
+        ResponseGetAllCourses response = new ResponseGetAllCourses();
 
-		List<CourseEntity> courseList = courseRepository.findAll();
+        List<CourseEntity> courseList = courseRepository.findAll();
 
-		List<CourseDTO> courseDtoList = new ArrayList<>();
+        List<CourseDTO> courseDtoList = courseList.stream().map(entity -> courseMapper.courseToCourseDto(entity)).collect(Collectors.toList());
 
-		courseList.forEach((entity) -> {
-			courseDtoList.add(courseMapper.courseToCourseDto(entity));
-		});
-		;
+        response.setCourses(courseDtoList);
 
-		response.setCourses(courseDtoList);
-
-		return response;
-	}
+        return response;
+    }
 
 	@Override
 	public ResponseGetCourse getCourse(RequestGetCourse request) {
-		ResponseGetCourse response = new ResponseGetCourse();
+        ResponseGetCourse response = new ResponseGetCourse();
 
-		Optional<CourseEntity> course = courseRepository.findById(request.getId());
+        Optional<CourseEntity> course = courseRepository.findById(request.getId());
 
-		CourseEntity entity = course.orElseThrow(() -> new AirwayNotFoundException("Not found"));
+        CourseEntity entity = course.orElseThrow(() -> new NotFoundException("Not found"));
 
-		response.setCourse(courseMapper.courseToCourseDto(entity));
+        response.setCourse(courseMapper.courseToCourseDto(entity));
 
-		return response;
-	}
+        return response;
+    }
 
-	@Override
-	public ResponseCreateCourse createCourse(RequestCreateCourse request) throws AirwayBusinessException {
-		ResponseCreateCourse response = new ResponseCreateCourse();
+    @Override
+    public ResponseCreateCourse createCourse(RequestCreateCourse request) throws BusinessException {
+        ResponseCreateCourse response = new ResponseCreateCourse();
 
-		try {
-			ResponseGetAirport responseOriginAirport = airportService
-					.getAirport(new RequestGetAirport(request.getOriginAirportName()));
-			ResponseGetAirport responseDestinationAirport = airportService
-					.getAirport(new RequestGetAirport(request.getDestinationAirportName()));
+        try {
+            ResponseGetAirport responseOriginAirport = airportService
+                    .getAirport(new RequestGetAirport(request.getOriginAirportName()));
+            ResponseGetAirport responseDestinationAirport = airportService
+                    .getAirport(new RequestGetAirport(request.getDestinationAirportName()));
 
-			Optional<CourseEntity> course = courseRepository.findByOriginIdAndDestinationId(
-					responseOriginAirport.getAirport().getId(), responseDestinationAirport.getAirport().getId());
-			
-			if(course.isPresent()) {
-				LOGGER.warn("The course is already set");
-				
-				throw new AirwayBusinessException(3001L, "Course is already set");
-			}
+            Optional<CourseEntity> course = courseRepository.findByOriginIdAndDestinationId(
+                    responseOriginAirport.getAirport().getId(), responseDestinationAirport.getAirport().getId());
 
-			CourseEntity entity = new CourseEntity();
-			entity.setOriginAirport(airportMapper.airportDtoToAirport(responseOriginAirport.getAirport()));
-			entity.setDestinationAirport(airportMapper.airportDtoToAirport(responseDestinationAirport.getAirport()));
+            if (course.isPresent()) {
+                LOGGER.warn("The course is already set");
 
-			CourseEntity courseSaved = courseRepository.save(entity);
-			courseRepository.flush();
+                throw new BusinessException(3001L, "Course is already set");
+            }
 
-			response.setCourseId(courseSaved.getId());
-		} catch (AirwayNotFoundException e) {
-			LOGGER.error("Cannot find one of airport. Error: ", e);
+            CourseEntity entity = new CourseEntity();
+            entity.setOriginAirport(airportMapper.airportDtoToAirport(responseOriginAirport.getAirport()));
+            entity.setDestinationAirport(airportMapper.airportDtoToAirport(responseDestinationAirport.getAirport()));
 
-			throw new AirwayBusinessException(3002L, "Cannot set course");
-		}
+            CourseEntity courseSaved = courseRepository.save(entity);
+            courseRepository.flush();
+
+            response.setCourseId(courseSaved.getId());
+        } catch (NotFoundException e) {
+            LOGGER.error("Cannot find one of airport. Error: ", e);
+
+            throw new BusinessException(3002L, "Cannot set course");
+        }
 
 		return response;
 	}

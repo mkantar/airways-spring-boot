@@ -1,6 +1,6 @@
 package com.kantar.airways.service.airline;
 
-import com.kantar.airways.common.exception.AirwayBusinessException;
+import com.kantar.airways.common.exception.BusinessException;
 import com.kantar.airways.service.airline.model.request.RequestCreateAirline;
 import com.kantar.airways.service.airline.model.request.RequestGetAirline;
 import com.kantar.airways.service.airline.model.request.RequestGetAllAirlines;
@@ -14,7 +14,7 @@ public interface AirlineService {
 	
 	ResponseGetAirline getAirline(RequestGetAirline request);
 
-    ResponseCreateAirline createAirline(RequestCreateAirline request) throws AirwayBusinessException;
+	ResponseCreateAirline createAirline(RequestCreateAirline request) throws BusinessException;
 
 
 }

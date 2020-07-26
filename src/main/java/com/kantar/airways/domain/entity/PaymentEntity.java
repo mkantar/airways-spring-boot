@@ -7,66 +7,63 @@ import java.math.BigDecimal;
 @Table(name = "PAYMENT")
 public class PaymentEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    private String creditCardNumber;
+	private String creditCardNumber;
 
-    private BigDecimal chargeAmount;
+	private BigDecimal chargeAmount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "passengerId", nullable = false)
-    private PassengerEntity passenger;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "passengerId", nullable = false)
+	private PassengerEntity passenger;
 
-    public PaymentEntity() {
-    }
+	public PaymentEntity() {
+	}
 
-    public PaymentEntity(Long id, String creditCardNumber, BigDecimal chargeAmount, PassengerEntity passenger) {
-        this.id = id;
-        this.creditCardNumber = creditCardNumber;
-        this.chargeAmount = chargeAmount;
-        this.passenger = passenger;
-    }
+	public PaymentEntity(Long id, String creditCardNumber, BigDecimal chargeAmount, PassengerEntity passenger) {
+		this.id = id;
+		this.creditCardNumber = creditCardNumber;
+		this.chargeAmount = chargeAmount;
+		this.passenger = passenger;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getCreditCardNumber() {
-        return creditCardNumber;
-    }
+	public String getCreditCardNumber() {
+		return creditCardNumber;
+	}
 
-    public void setCreditCardNumber(String creditCardNumber) {
-        this.creditCardNumber = creditCardNumber;
-    }
+	public void setCreditCardNumber(String creditCardNumber) {
+		this.creditCardNumber = creditCardNumber;
+	}
 
-    public BigDecimal getChargeAmount() {
-        return chargeAmount;
-    }
+	public BigDecimal getChargeAmount() {
+		return chargeAmount;
+	}
 
-    public void setChargeAmount(BigDecimal chargeAmount) {
-        this.chargeAmount = chargeAmount;
-    }
+	public void setChargeAmount(BigDecimal chargeAmount) {
+		this.chargeAmount = chargeAmount;
+	}
 
-    public PassengerEntity getPassenger() {
-        return passenger;
-    }
+	public PassengerEntity getPassenger() {
+		return passenger;
+	}
 
-    public void setPassenger(PassengerEntity passenger) {
-        this.passenger = passenger;
-    }
+	public void setPassenger(PassengerEntity passenger) {
+		this.passenger = passenger;
+	}
 
-    @Override
-    public String toString() {
-        return "PaymentEntity{" +
-                "id=" + id +
-                ", creditCardNumber='" + creditCardNumber + '\'' +
-                ", chargeAmount=" + chargeAmount +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "PaymentEntity{" + "id=" + id + ", creditCardNumber='" + creditCardNumber + '\'' + ", chargeAmount="
+				+ chargeAmount + '}';
+	}
 }

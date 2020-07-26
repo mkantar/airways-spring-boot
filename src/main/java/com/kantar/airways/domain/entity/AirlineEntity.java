@@ -1,52 +1,44 @@
 package com.kantar.airways.domain.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "AIRLINE")
 public class AirlineEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    @Column(unique = true)
-    private String company;
+	@Column(unique = true)
+	private String company;
 
-    public AirlineEntity() {
-    }
+	public AirlineEntity() {
+	}
 
-    public AirlineEntity(Long id, String company) {
-        this.id = id;
-        this.company = company;
-    }
+	public AirlineEntity(Long id, String company) {
+		this.id = id;
+		this.company = company;
+	}
 
-    public Long getId() {
-        return id;
-    }
+	public Long getId() {
+		return id;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public String getCompany() {
-        return company;
-    }
+	public String getCompany() {
+		return company;
+	}
 
-    public void setCompany(String company) {
-        this.company = company;
-    }
+	public void setCompany(String company) {
+		this.company = company;
+	}
 
-    @Override
-    public String toString() {
-        return "AirlineEntity{" +
-                "id=" + id +
-                ", company='" + company + '\'' +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "AirlineEntity{" + "id=" + id + ", company='" + company + '\'' + '}';
+	}
 }

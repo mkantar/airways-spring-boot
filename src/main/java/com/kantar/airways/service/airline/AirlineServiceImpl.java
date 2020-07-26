@@ -1,19 +1,7 @@
 package com.kantar.airways.service.airline;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.kantar.airways.common.exception.AirwayBusinessException;
-import com.kantar.airways.common.exception.AirwayNotFoundException;
+import com.kantar.airways.common.exception.BusinessException;
+import com.kantar.airways.common.exception.NotFoundException;
 import com.kantar.airways.common.mapper.AirlineMapper;
 import com.kantar.airways.domain.entity.AirlineEntity;
 import com.kantar.airways.domain.repository.AirlineRepository;
@@ -24,6 +12,17 @@ import com.kantar.airways.service.airline.model.request.RequestGetAllAirlines;
 import com.kantar.airways.service.airline.model.response.ResponseCreateAirline;
 import com.kantar.airways.service.airline.model.response.ResponseGetAirline;
 import com.kantar.airways.service.airline.model.response.ResponseGetAllAirlines;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 @Transactional(propagation = Propagation.REQUIRED)
@@ -56,7 +55,7 @@ public class AirlineServiceImpl implements AirlineService {
 	public ResponseGetAirline getAirline(RequestGetAirline request) {
 		ResponseGetAirline response = new ResponseGetAirline();
 
-		Optional<AirlineEntity> airline = Optional.empty();
+		Optional<AirlineEntity> airline;
 
 		if (Objects.nonNull(request.getId())) {
 			airline = airlineRepository.findById(request.getId());
@@ -64,7 +63,7 @@ public class AirlineServiceImpl implements AirlineService {
 			airline = airlineRepository.findByCompany(request.getName());
 		}
 
-		AirlineEntity entity = airline.orElseThrow(() -> new AirwayNotFoundException("Not found"));
+		AirlineEntity entity = airline.orElseThrow(() -> new NotFoundException("Not found"));
 
 		response.setAirline(airlineMapper.airlineToAirlineDto(entity));
 
@@ -72,14 +71,14 @@ public class AirlineServiceImpl implements AirlineService {
 	}
 
 	@Override
-	public ResponseCreateAirline createAirline(RequestCreateAirline request) throws AirwayBusinessException {
+	public ResponseCreateAirline createAirline(RequestCreateAirline request) throws BusinessException {
 		ResponseCreateAirline response = new ResponseCreateAirline();
 
 		Optional<AirlineEntity> airline = airlineRepository.findByCompany(request.getName());
 
 		if (airline.isPresent()) {
 			LOGGER.warn("Airline already exists. Id: " + airline.get().getId());
-			throw new AirwayBusinessException(1001L, "Airline already exists");
+			throw new BusinessException(1001L, "Airline already exists");
 		}
 
 		AirlineEntity entity = new AirlineEntity();

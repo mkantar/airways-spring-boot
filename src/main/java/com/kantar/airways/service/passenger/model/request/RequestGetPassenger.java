@@ -1,15 +1,14 @@
-package com.kantar.airways.service.flight.model.request;
+package com.kantar.airways.service.passenger.model.request;
 
 import com.kantar.airways.common.model.BaseRequest;
 
-public class RequestCheckFlight extends BaseRequest {
+public class RequestGetPassenger extends BaseRequest {
     private Long id;
 
-    public RequestCheckFlight() {
-        super();
+    public RequestGetPassenger() {
     }
 
-    public RequestCheckFlight(Long id) {
+    public RequestGetPassenger(Long id) {
         this.id = id;
     }
 

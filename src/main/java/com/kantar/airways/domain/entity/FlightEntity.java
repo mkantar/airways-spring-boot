@@ -1,24 +1,16 @@
 package com.kantar.airways.domain.entity;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 
 @Entity
 @Table(name = "FLIGHT")
 public class FlightEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
 	private Integer totalSeat;
@@ -26,6 +18,8 @@ public class FlightEntity {
 	private Integer availableSeat;
 
 	private BigDecimal fee;
+
+	private Float factor;
 
 	private LocalDateTime date;
 
@@ -40,12 +34,13 @@ public class FlightEntity {
 	public FlightEntity() {
 	}
 
-	public FlightEntity(Long id, Integer totalSeat, Integer availableSeat, BigDecimal fee, LocalDateTime date,
-			AirlineEntity airline, CourseEntity course) {
+	public FlightEntity(Long id, Integer totalSeat, Integer availableSeat, BigDecimal fee, Float factor,
+						LocalDateTime date, AirlineEntity airline, CourseEntity course) {
 		this.id = id;
 		this.totalSeat = totalSeat;
 		this.availableSeat = availableSeat;
 		this.fee = fee;
+		this.factor = factor;
 		this.date = date;
 		this.airline = airline;
 		this.course = course;
@@ -81,6 +76,14 @@ public class FlightEntity {
 
 	public void setFee(BigDecimal fee) {
 		this.fee = fee;
+	}
+
+	public Float getFactor() {
+		return factor;
+	}
+
+	public void setFactor(Float factor) {
+		this.factor = factor;
 	}
 
 	public LocalDateTime getDate() {
